@@ -44,6 +44,18 @@
         border-radius: 8px;
         font-size: 15px;
     }
+ }
+    @media (max-width: 480px) {
+        h2 { font-size: 22px; }
+        input { font-size: 15px; padding: 12px; }
+        button { font-size: 16px; }
+        .result { font-size: 18px; }
+    }
+    @media (min-width: 900px) {
+        .container {
+            max-width: 450px;
+            padding: 35px 30px;
+        }
 
     button {
         width: 100%;
@@ -74,3 +86,4 @@
          position: relative;
     right: 15px;
     }
+
