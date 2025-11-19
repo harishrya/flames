@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<head>
+<title>FLAMES</title>
+<link rel="stylesheet" href="flames.css">
+<link rel="icon" type="image/png" href="flames.jpg">
+</head>
+<body>
+    <form method="get" id="loginForm">
+<div class="container">
+    <h2><span>💚</span> FLAMES <span>💚</span></h2>
+
+    <input type="text"class="q" id="name1" placeholder="Enter your name">
+    <input type="text"class="q" id="name2" placeholder="Enter your partner's name">
+
+    <button onclick="calculateFLAMES()">CHECK</button>
+</form>
+
+    <div id="result" class="result"></div>
+</div>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js';
+
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAcpYhHOBbzqvadh112ebqTgOdQptpYTgo",
+    authDomain: "flames-16a56.firebaseapp.com",
+    databaseURL: "https://flames-16a56-default-rtdb.firebaseio.com",
+    projectId: "flames-16a56",
+    storageBucket: "flames-16a56.firebasestorage.app",
+    messagingSenderId: "409314533112",
+    appId: "1:409314533112:web:b40b948f71baa6ad3e650d"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+    // Handle form submission
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var name1 = document.getElementById('name1').value;
+        var name2 = document.getElementById('name2').value;
+        // Set data in Firebase Realtime Database (use the modular functions)
+        const userRef = ref(database, 'yourname/' + name1);
+        set(userRef, {
+          lovername: name2
+        }).then(function() {
+          alert('');
+        }).catch(function(error) {
+          alert('Error: ' + error.message);
+        });
+      });
+    });
+  
+</script>
+
+<script>
+function clean(str) {
+    return str.toLowerCase().replace(/[^a-z]/g, "");
+}
+
+function unmatched(a, b) {
+    let freq = new Array(26).fill(0);
+    for (let ch of a) freq[ch.charCodeAt(0) - 97]++;
+    for (let ch of b) freq[ch.charCodeAt(0) - 97]--;
+    return freq.reduce((s, v) => s + Math.abs(v), 0);
+}
+
+function flames(count) {
+    let list = ["F","L","A","M","E","S"];
+    if (count === 0) return "S";
+    let index = 0;
+
+    while (list.length > 1) {
+        let mod = count % list.length;
+        let remove = mod === 0 ? list.length - 1 : mod - 1;
+        remove = (index + remove) % list.length;
+        list.splice(remove, 1);
+        index = remove;
+    }
+    return list[0];
+}
+
+const meaning = {
+    F: "😊 Friends",
+    L: "❤️ Love",
+    A: "😇 Affection",
+    M: "💍 Marriage",
+    E: "😒 Enemies",
+    S: "👨‍👩‍👧 Siblings"
+};
+
+function calculateFLAMES() {
+    let n1 = clean(document.getElementById("name1").value);
+    let n2 = clean(document.getElementById("name2").value);
+
+    if (!n1 || !n2) {
+        document.getElementById("result").innerHTML = "⚠️ Enter both names";
+        return;
+    }
+
+    let count = unmatched(n1, n2);
+    let letter = flames(count);
+
+    document.getElementById("result").innerHTML =
+        `Result: <b>${meaning[letter]}</b>`;
+}
+</script>
+
+</body>
+</html>
